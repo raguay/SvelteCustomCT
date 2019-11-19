@@ -1,26 +1,41 @@
-<content>
-  {#await promise }
-    <p>Loading {$location}....</p>
+{#await lastPromise}
+  <content in:fade="{{duration: 500}}" style="border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
+    <h2>Loading Partials...</h2>
+  </content>
+{:then dt}
+  {#await firstPromise}
+    <content in:fade="{{duration: 500}}" style="border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
+      <h2 id='waiting'>Loading page...</h2>
+    </content>
   {:then data}
-    {@html processData(data)}
-  {:catch error}
-    <p class="alert">Error: {error} on getting {$location}.</p>
+    <content in:fade="{{duration: 500}}" style="border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
+      {@html processData(data)}
+    </content>
+  {:catch e}
+    <content in:fade="{{duration: 500}}" style="border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >     
+      {@html errorPage}
+    </content>
   {/await}
-</content>
-<Sidebar  />
-
+{:catch e}
+  <content in:fade="{{duration: 500}}" style="border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >     
+    {@html errorPage}
+  </content>
+{/await}
 
 <style>
   content {
-    width: 85%;
-    background-color: #ECDAAC;
-    color: black;
+    width: 100%;
     margin: auto;
-    border-radius: 10px;
-    border: 5px solid #AA7942;
     padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
+  }
+
+  #waiting {
+    height: 100%;
+    width: 100%;
+    min-height: 200px;
+    margin: auto;
   }
 
   .alert {
@@ -30,26 +45,43 @@
 </style>
 
 <script>
-  import Sidebar from './Sidebar.svelte';
   import { onMount } from 'svelte';
   import showdown from 'showdown';
   import {location, querystring} from 'svelte-spa-router';
   import { get } from 'svelte/store';
-
-  export let params;
+  import { fade } from 'svelte/transition';
+  import { info } from '../store/infoStore.js';
 
   let converter = null;
   let page = null;
-  let promise = fetchPage(page);
+  let firstPromise;
+  let errorPage = '';
+  let parts = [];
+  let styles = {};
+  let site = {};
+  let lastPromise;
 
-  async function fetchPage(page) {
-    if(page !== null) {
-      const response = await fetch('/site' + page + ".md");
-      const text = await response.text();
-      if(response.ok) {
-        return text;
+  async function fetchPage(pg) {
+    if(pg !== null) {
+      var address = '';
+      if(site.local) {
+        address = site.address;
       } else {
-        throw new Error(text);
+        address = site.GitHub;
+      }
+      const response = await fetch(address + '/site' + pg + ".md");
+      const text = await response.text();
+      if(response.ok && (response.status === 200)) {
+        if(((text[0] !== '-')&&(text[0] !== '+'))||(text[0] === '<')) {
+          //
+          // It's not a proper header. Treat as an error.
+          //
+          return errorPage
+        } else {
+          return text;
+        }
+      } else {
+        return errorPage
       }
     } else {
       //
@@ -83,7 +115,7 @@
       return text;
     });
 
-   window.Handlebars.registerHelper('date', function(dFormat) {
+    window.Handlebars.registerHelper('date', function(dFormat) {
       return window.moment().format(dFormat);
     });
 
@@ -107,13 +139,60 @@
     // This is done by setting a new promise in the promise variable for retrieving
     // the new page information.
     //
-    location.subscribe(value => {
-      promise = fetchPage(value);
+    const unsubscribeInfo = info.subscribe(value => {
+      site = value;
+      styles = value.styles;
     });
+
+    const unsubscribeLocation = location.subscribe(value => {
+      page = value;
+      lastPromise = getPartials();
+      firstPromise = fetchPage(page);
+    });
+
+    return () => { unsubscribeInfo(); unsubscribeLocation(); };
   });
+
+  async function getPartials() {
+    //
+    // Get some error page.
+    //
+    var st = get(info);
+    var address = '';
+    if(st.local) {
+      address = st.address;
+    } else {
+      address = st.GitHub;
+    }
+    var rep = await fetch(address + '/site/404.md');
+    errorPage = await rep.text();
+
+    //
+    // Get the parts pages.
+    //
+    var lastPromise = null;
+    for(var pg of st.parts) {
+      var rep = await fetch(address + '/site/parts/' + pg);
+      var partial = await rep.text();
+      lastPromise = partial;
+      window.Handlebars.registerPartial(pg, partial);
+    }
+
+    return lastPromise;
+  }
 
   function processData(data) {
     var result = '';
+    
+    //
+    // This should never happen but if it does, then reload.
+    //
+    if(typeof data === 'undefined') return '';
+    
+    if(data[0] === '<') {
+      firstPromise = fetchPage(page);
+      return '';
+    }
 
     //
     // There are two types of front matter: delimited by three '-' and using a colon,
@@ -171,6 +250,9 @@
     hdata["cHMS24"] = window.moment().format("H:mm:ss");
     hdata["cHM24"] = window.moment().format("H:mm");
 
+    //
+    // Add the front matter to the Handlebar's data.
+    //
     for(var i = 1; i < fm.length;i++) {
       var parts = fm[i].split(' = ');
       if(parts.length < 2) parts = fm[i].split(': ');
@@ -191,11 +273,30 @@
     }
 
     //
+    // Add the information from the info store.
+    //
+    const linfo = get(info);
+    for(var key of Object.keys(linfo)) {
+      hdata[key] = linfo[key];
+    }
+
+    //
     // Run the body through Handlebars.
     //
     var bodyTemplate = window.Handlebars.compile(body.join('\n'));
-    var newBody = bodyTemplate(hdata);
-    
+    var trying = true;
+    var newBody = '';
+
+    //
+    // If the partials are called before loaded, running the template will throw
+    // an error. Catch it and tell the user to move to another page and back.
+    //
+    try {
+      newBody = bodyTemplate(hdata);
+    } catch(e) {
+      newBody = "<h1>Page not ready...</h1><p>Please don't reload this page. Go to another page and come back.</p>";
+    }
+
     //
     // Convert the data given to HTML.
     //

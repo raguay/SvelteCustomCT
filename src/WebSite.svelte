@@ -1,42 +1,44 @@
 <svelte:head>
-  <title>{info.siteName}</title>
+  <title>{siteName}</title>
   <link rel='icon' type='image/png' href='/imgs/favicon.png'>
 </svelte:head>
 
-<div id='page'>
-  <header>
-    <div id='logo'>
-      <img src='/imgs/logo.jpg' alt='Logo'>
-    </div>
+<div id='page' style="background-color: {styles.backgroundColor}; font: {styles.font};">
+  <header style="background-color: {styles.divBackgroundColor}; background-image: {styles.headerBackgroundPicture}; 
+  border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius};
+  color: {styles.textColor}; font: {styles.headerFont};">
+    <Logo />
     <div id='title'>
-      <h1>{info.siteName}</h1>
-      <h3>{info.byLine}</h3>
+      <h1>{siteName}</h1>
+      <h3>{byLine}</h3>
+    </div>
+    <div id='spacer'>
     </div>
   </header>
-  <div id='navbar'>
-    <a class='navItem' href='/' use:link>Home</a>
-    <a class='navItem' href='/blog/index' use:link>Blog</a>
-    <a class='navItem' href='/projects/index' use:link >Projects</a>
-    <a class='navItem' href='/favtools' use:link >Favorite Tools</a>
-    <a class='navItem' href='/about' use:link>About</a>
-  </div>
-  <div id='main'>
+  <NavBar />
+  <div id='main' >
+    {#if styles.showSideBar && styles.sideBarLeft}
+      <Sidebar />
+    {/if}
     <Router {routes} />
+    {#if styles.showSideBar && !styles.sideBarLeft}
+      <Sidebar />
+    {/if}
   </div>
-  <footer>
-    <div id='leftBox'>
-      <p>Created using <a href=''>SvelteWeb</a></p>
-      <p>Copyrighted by Richard Guay</p>
-    </div>
-  </footer>
+  <Footer />
 </div>
 
 <style>
   :global(body) {
     display: flex;
     flex-direction: column;
-    background-color: #D1BD79;
-    margin: 15px;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  :global(a.active) {
+    color: #155393 !important;
+    text-decoration-color: #155393;
   }
 
   header {
@@ -49,6 +51,12 @@
     border-radius: 10px;
     border: 5px solid #AA7942;
     padding: 10px;
+  }
+
+  #spacer {
+    width: 150px;
+    padding: 0px;
+    margin: 0px;
   }
 
   #title {
@@ -64,28 +72,11 @@
     height: 100px;
   }
 
-  #navbar {
-    display: flex;
-    flex-direction: row;
-    width: 85%;
-    background-color: #ECDAAC;
-    color: black;
-    margin: auto;
-    border-radius: 10px;
-    border: 5px solid #AA7942;
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-
-  :global(.navItem) {
-    margin-right: 10px;
-    text-decoration: none;
-  }
-
   #page {
     display: flex;
     flex-direction: column;
+    margin: 0px;
+    padding: 15px;
   }
 
   #main {
@@ -96,34 +87,20 @@
     margin: auto;
     padding: 0px;
  }
-
-  #leftBox {
-    float: left;
-    display: flex;
-    flex-direction: column;
-  }
-
-  #leftBox p {
-    margin: 0px;
-    padding: 0px;
-  }
-
-  footer {
-    width: 85%;
-    background-color: #ECDAAC;
-    color: black;
-    margin: auto;
-    border-radius: 10px;
-    border: 5px solid #AA7942;
-    padding: 10px;
-  }
 </style>
 
 <script>
+  import { onMount } from 'svelte';
   import About from './components/About.svexy';
   import Index from './components/Index.svexy';
   import Page from './components/Page.svelte';
+  import Logo from './components/Logo.svelte';
+  import Sidebar from './components/Sidebar.svelte';
+  import NavBar from './components/NavBar.svelte';
+  import Footer from './components/Footer.svelte';
+  import { info } from './store/infoStore.js';
   import Router, { link } from 'svelte-spa-router';
+  import active from 'svelte-spa-router/active';
 
   const routes = {
     //
@@ -139,12 +116,26 @@
     // This is optional, but if present it must be the last
     //
     // If not caught otherwise, it must be a markdown file
-    // on the file system.
+    // on the file system. You can encapsulate the Page inside
+    // your own for more customizations.
     //
-    '*': Page,
+    '*': Page
   }
 
-  export let info;
+  let siteName = '';
+  let byLine = '';
+  let styles = {};
 
+  onMount(() => {
+    //
+    // Subscribe to the information store to get the site information.
+    //
+    info.subscribe((value) => {
+      siteName = value.siteName;
+      byLine = value.byLine;
+      styles = value.styles;
+      document.body.style.backgroundColor = styles.backgroundColor;
+    });
+  });
 </script>
 

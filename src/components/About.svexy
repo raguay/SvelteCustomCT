@@ -1,24 +1,33 @@
 ```js exec
-  import Sidebar from './Sidebar.svelte';
+  import { fade } from 'svelte/transition';
+  import { onMount } from 'svelte';
+  import { info } from '../store/infoStore.js';
+ 
+  let styles = {};
 
-  export let params;
+  onMount(() => {
+    //
+    // Subscribe to the information store to get the site information.
+    //
+    const unsubscribeInfo = info.subscribe((value) => {
+      styles = value.styles;
+    });
+
+    return () => { unsubscribeInfo(); };
+  });
 ```
 
 ```css style
   .box {
-    width: 85%;
-    background-color: #ECDAAC;
-    color: black;
+    width: 100%;
     margin: auto;
-    border-radius: 10px;
-    border: 5px solid #AA7942;
     padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
   }
 ```
 
-<div class="box">
+<div class="box" style="border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" in:fade="{{duration: 500}}">
 
 ## About Us
 
@@ -38,16 +47,48 @@ I also write tutorials for [Computer Tuts+](http://computers.tutsplus.com). I tr
 articles in the areas that I already have similar topics on this site (ie. Alfred articles are 
 listed on my [Alfred Workflows page](/#/projects/alfred)). Here are articles that do not go along with other themes:
 
+- [Quick Tip: Hierarchical Custom Post Types Not Working for You?](http://code.tutsplus.com/articles/quick-tip-hierarchical-custom-post-types-not-working-for-you--wp-26508)
+- [PopClip: Scripting Extensions](http://computers.tutsplus.com/tutorials/popclip-scripting-extensions--mac-55842)
+- [How to Effortlessly Create Markdown With TextSoap ](http://computers.tutsplus.com/tutorials/how-to-effortlessly-create-markdown-with-textsoap--mac-55744)
+- [Writing Destinations for Dropzone](http://computers.tutsplus.com/tutorials/writing-destinations-for-dropzone--mac-61180)
 - [Take Control With ControlPlane](http://goo.gl/c0udXk)
 - [How to Order Thoughts From Chaos to Masterpiece](http://goo.gl/6GdMEC)
 - [Getting Spiffy With Powerline](http://goo.gl/bLpFQ0)
 - [Perfect Configurations with Homebrew and Cask](http://computers.tutsplus.com/tutorials/perfect-configurations-with-homebrew-and-cask--cms-20768)
 - [Vim for Beginners](http://computers.tutsplus.com/tutorials/vim-for-beginners--cms-21118?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+mactuts+%28Tuts%2B+Mac+Computer+Skills%29)
 - [Beginners Guide to Console](https://computers.tutsplus.com/tutorials/beginners-guide-to-console--cms-21163?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+mactuts+%28Tuts%2B+Mac+Computer+Skills%29)
+- [Use a Mac to Monitor Website Uptime or Other Regular Tasks](http://computers.tutsplus.com/tutorials/use-a-mac-to-monitor-website-uptime-or-other-regular-tasks--cms-21183)
 - [Start Developing with go on the Mac](http://computers.tutsplus.com/tutorials/start-developing-with-go-on-the-mac--cms-21251)
 - [Basic Vim Configuration](http://computers.tutsplus.com/tutorials/basic-vim-configuration--cms-21498)
 - [Save Time by Automating the Mac](https://computers.tutsplus.com/tutorials/save-time-by-automating-the-mac--cms-21404)
+- [Writing Dropzone 3 Actions](http://computers.tutsplus.com/tutorials/writing-dropzone-3-actions--cms-21590)
+- [Customizing FoldingText](http://computers.tutsplus.com/tutorials/customizing-foldingtext--cms-21674)
+- [Creating LaunchBar 6 Actions](http://computers.tutsplus.com/tutorials/creating-launchbar-6-actions--cms-22733)
 - [How to Create a Slideshow Presentation From Markdown Notes](https://computers.tutsplus.com/tutorials/how-to-create-a-slideshow-presentation-from-markdown-notes--cms-23062)
+- [Optimizing Your Workflow](http://computers.tutsplus.com/articles/optimizing-your-workflow--cms-23022)
+- [Automating Text Conversions With Textwell](http://computers.tutsplus.com/tutorials/automating-text-conversions-with-textwell--cms-23263)
+- [Cross-Platform Development With NW.js](http://code.tutsplus.com/tutorials/cross-platform-development-with-nwjs--cms-23281)
+- [Fast Web UI With Webknife](http://code.tutsplus.com/tutorials/fast-web-ui-with-webknife--cms-24216)
+- [Sudo Explained](http://computers.tutsplus.com/tutorials/sudo-explained--cms-25215)
+- [Discover the Best, and Free, Alternatives to Well-Known Mac Apps](http://computers.tutsplus.com/tutorials/discover-the-best-and-free-alternatives-to-well-known-mac-apps--cms-24686)
+- [Intermediate VimScript](http://computers.tutsplus.com/tutorials/intermediate-vimscript--cms-24849)
+- [Development With Commander One](http://computers.tutsplus.com/tutorials/development-with-commander-one--cms-25196)
+- [From Bootcamp to Parallels Virtual Machine on a New Mac](http://computers.tutsplus.com/tutorials/from-bootcamp-to-parallels-virtual-machine-on-a-new-mac--cms-24985)
+- [Building a CMS: Structure and Styling](http://code.tutsplus.com/tutorials/building-a-cms-structure-and-styling--cms-24547)
+- [Building a CMS: goPress](http://code.tutsplus.com/tutorials/building-a-cms-gopress--cms-25073)
+- [Build a CMS: nodePress](http://code.tutsplus.com/tutorials/build-a-cms-nodepress--cms-25633)
+- [Building a CMS: rubyPress](http://code.tutsplus.com/tutorials/building-a-cms-rubypress--cms-25818)
+- [Ways of Getting Active Notifications to a Mac: Theory](http://computers.tutsplus.com/tutorials/ways-of-getting-active-notifications-to-your-mac-theory--cms-26877)
+- [Ways of Getting Active Notifications to a Mac: Application](http://computers.tutsplus.com/tutorials/ways-of-getting-active-notifications-to-your-mac-application--cms-26907)
+- [How to Customize the Menu Bar With BitBar](http://computers.tutsplus.com/tutorials/customize-the-menu-bar-with-bitbar--cms-26946)
+- [Building a CMS: phpPress](http://code.tutsplus.com/tutorials/building-a-cms-phppress--cms-26536)
+- [A Beginners Guide to JXA, JavaScript Application Scripting](http://computers.tutsplus.com/tutorials/a-beginners-guide-to-javascript-application-scripting-jxa--cms-27171)
+- [Using Monodraw to Comment Code](http://computers.tutsplus.com/tutorials/using-monodraw-to-comment-code--cms-27278)
+- [Processing Forms With phpPress, goPress, rubyPress, and nodePress](http://code.tutsplus.com/tutorials/processing-forms-with-phppress-gopress-rubypress-and-nodepress--cms-27473)
+- [Add a Website Calendar Using Jalendar 2](http://code.tutsplus.com/tutorials/using-jalendar-2--cms-27939)
+- [fman: The Extendable File Manager for Any System](http://computers.tutsplus.com/tutorials/fman-the-extendable-file-manager-for-any-system--cms-28340)
+- [Setapp: The New Way to Get Applications on a Mac](http://computers.tutsplus.com/tutorials/setapp-the-new-way-to-get-applications-on-your-mac--cms-28581)
+- [How to Create Your Own Local Premium URL Shortener Service](http://code.tutsplus.com/tutorials/how-to-create-your-own-local-premium-url-shortener-service--cms-29626)
+
 </div>
 
-<Sidebar />

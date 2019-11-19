@@ -1,5 +1,7 @@
-
-## Projects
+---
+title: "My Projects"
+---
+## {{title}}
 
 Here are my current projects:
 
@@ -47,6 +49,13 @@ My favorite file manager is [fman](https://fman.io/) because I can add functiona
 ### [BitBar](/#/projects/bitbar)
 
 [BitBar](https://getbitbar.com/) is a free program for placing information into the macOS menu bar. Here are some scripts I've created for the program.
+
+### [TextBar](/#/projects/textbar)
+
+[TextBar](http://richsomerfield.com/apps/textbar/) is an application much like Bitbar,
+but has more features and isn't free. I've moved many of my BitBar scripts to TextBar,
+and I've created some specific for TextBar making use of the html displaying abilities.
+If you like to add scripts to your menubar, this is a great program to use.
 
 ### [eLisp](/#/projects/elisp)
 
