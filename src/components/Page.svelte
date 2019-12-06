@@ -1,34 +1,32 @@
 {#await lastPromise}
-  <content in:fade="{{duration: 500}}" style="border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
+  <content in:fade="{{duration: 500}}" style="width: {sideBarON ? '70%' : '100%'}; border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
     <h2>Loading Partials...</h2>
   </content>
 {:then dt}
   {#await firstPromise}
-    <content in:fade="{{duration: 500}}" style="border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
+    <content in:fade="{{duration: 500}}" style="width: {sideBarON ? '70%' : '100%'}; border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
       <h2 id='waiting'>Loading page...</h2>
     </content>
   {:then data}
-    <content in:fade="{{duration: 500}}" style="border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
+    <content in:fade="{{duration: 500}}" style="width: {sideBarON ? '70%' : '100%'}; border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
       {@html processData(data)}
     </content>
   {:catch e}
-    <content in:fade="{{duration: 500}}" style="border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >     
+    <content in:fade="{{duration: 500}}" style="width: {sideBarON ? '70%' : '100%'}; border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >     
       {@html errorPage}
     </content>
   {/await}
 {:catch e}
-  <content in:fade="{{duration: 500}}" style="border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >     
+  <content in:fade="{{duration: 500}}" style="width: {sideBarON ? '70%' : '100%'}; border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >     
     {@html errorPage}
   </content>
 {/await}
 
 <style>
   content {
-    width: 100%;
-    margin: auto;
+    margin: 10px 0px;
     padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    flex-shrink: 1;
   }
 
   #waiting {
@@ -36,6 +34,10 @@
     width: 100%;
     min-height: 200px;
     margin: auto;
+  }
+
+  code {
+    overflow: auto;
   }
 
   .alert {
@@ -47,11 +49,15 @@
 <script>
   import { onMount } from 'svelte';
   import showdown from 'showdown';
+  import showdownHighlight from "showdown-highlight";
   import {location, querystring} from 'svelte-spa-router';
   import { get } from 'svelte/store';
   import { fade } from 'svelte/transition';
   import { info } from '../store/infoStore.js';
+  import { showSidebar } from '../store/showSidebar.js';
 
+  export let params = {};
+  
   let converter = null;
   let page = null;
   let firstPromise;
@@ -60,6 +66,7 @@
   let styles = {};
   let site = {};
   let lastPromise;
+  let sideBarON = true;
 
   async function fetchPage(pg) {
     if(pg !== null) {
@@ -103,7 +110,9 @@
     showdown.setFlavor('github');
     showdown.setOption('simpleLineBreaks',false);
 
-    converter = new showdown.Converter();
+    converter = new showdown.Converter({
+      extensions: [showdownHighlight]
+    });
 
     //
     // Create the helpers functions for Handlebars.
@@ -150,7 +159,15 @@
       firstPromise = fetchPage(page);
     });
 
-    return () => { unsubscribeInfo(); unsubscribeLocation(); };
+    const unsubscribeshowSidebar = showSidebar.subscribe(value => {
+      sideBarON = value;
+    });
+
+    return () => { 
+      unsubscribeshowSidebar(); 
+      unsubscribeInfo(); 
+      unsubscribeLocation();
+    };
   });
 
   async function getPartials() {
@@ -294,7 +311,7 @@
     try {
       newBody = bodyTemplate(hdata);
     } catch(e) {
-      newBody = "<h1>Page not ready...</h1><p>Please don't reload this page. Go to another page and come back.</p>";
+      newBody = "<h1>Page not ready...</h1><p>Please don't reload this page. Go to another markdown page and come back.</p>";
     }
 
     //

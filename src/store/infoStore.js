@@ -19,7 +19,10 @@ export const info = writable({
     font: '20px Times New Romand, Arial',
     headerFont: '20px Verdana, Arial',
     showSideBar: true,
-    sideBarLeft: false
+    sideBarLeft: false,
+    widthLogo: 920,
+    widthNavbar: 700,
+    widthSidebar: 900
   }
 });
 

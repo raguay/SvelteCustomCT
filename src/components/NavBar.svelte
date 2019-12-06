@@ -1,9 +1,11 @@
 <div id='navbar' style="background-color: {styles.divColor}; background-image: {styles.divbackgroundPicture}; 
                         border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; 
-                        color: {styles.textColor};" >
+                        color: {styles.textColor};
+                        flex-direction: {navBarON ? 'row' : 'column'};" >
   <a class='navItem' href='/' use:link use:active>Home</a>
   <a class='navItem' href='/blog/index' use:link use:active>Blog</a>
   <a class='navItem' href='/projects/index' use:link use:active>Projects</a>
+  <a class='navItem' href='/tutorials/index' use:link use:active>Tutorials</a>
   <a class='navItem' href='/favtools' use:link use:active>Favorite Tools</a>
   <a class='navItem' href='/about' use:link use:active>About</a>
 </div>
@@ -41,8 +43,10 @@
   import active from 'svelte-spa-router/active';
   import { onMount } from 'svelte';
   import { info } from '../store/infoStore.js';
- 
+  import { showNavbar } from '../store/showNavbar.js';
+
   let styles = {};
+  let navBarON = true;
 
   onMount(() => {
     //
@@ -52,7 +56,11 @@
       styles = value.styles;
     });
 
-    return () => { unsubscribeInfo(); };
+    const unsubscribeshowNavbar = showNavbar.subscribe((value) => {
+      navBarON = value;
+    })
+
+    return () => { unsubscribeshowNavbar(); unsubscribeInfo(); };
   });
 
 </script>
