@@ -79,7 +79,7 @@
       const response = await fetch(address + '/site' + pg + ".md");
       const text = await response.text();
       if(response.ok && (response.status === 200)) {
-        if(((text[0] !== '-')&&(text[0] !== '+'))||(text[0] === '<')) {
+        if(((text[0] !== '-')&&(text[0] !== '+'))||(text[0] == '<')) {
           //
           // It's not a proper header. Treat as an error.
           //
@@ -182,7 +182,8 @@
       address = st.GitHub;
     }
     var rep = await fetch(address + '/site/404.md');
-    errorPage = await rep.text();
+    var errorPageOrig = await rep.text();
+    errorPage = processData(errorPageOrig);
 
     //
     // Get the parts pages.
@@ -207,8 +208,7 @@
     if(typeof data === 'undefined') return '';
     
     if(data[0] === '<') {
-      firstPromise = fetchPage(page);
-      return '';
+      return data;
     }
 
     //

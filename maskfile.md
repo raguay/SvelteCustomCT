@@ -14,7 +14,6 @@ cp public/CNAME launch
 cp public/*.xml launch
 cp public/*.txt launch
 cp public/feed.json launch
-cp public/404.html launch
 
 #
 # upload the changes.
