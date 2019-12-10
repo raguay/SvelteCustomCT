@@ -3,14 +3,11 @@
   import { onMount } from 'svelte';
   import { info } from '../store/infoStore.js';
  
-  let styles = {};
-
   onMount(() => {
     //
     // Subscribe to the information store to get the site information.
     //
     const unsubscribeInfo = info.subscribe((value) => {
-      styles = value.styles;
     });
 
     return () => { unsubscribeInfo(); };
@@ -26,7 +23,10 @@
     margin-bottom: 10px;
   }
 ```
-<div class="box" style="background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor}; border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius};" in:fade="{{duration: 500}}">
+<div class="box" style="background-color: {$info.styles.divColor}; 
+                        background-image: {$info.styles.divBackgroundPicture}; 
+                        color: {$info.styles.textColor}; border: {$info.styles.borderSize} solid {$info.styles.borderColor};
+                        border-radius: {$info.styles.borderRadius};" in:fade="{{duration: 500}}">
 
 My dad always told me, "make sure you have the right tool for the job! The wrong tool will take longer to get the job done, and usually will make a mess of it." I have always lived by that rule. Unfortunately, many people tackle their computer jobs with tools (programs) that are not appropriate for the task. Custom Computer Tools is working to help with this problem.
 

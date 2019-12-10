@@ -1,23 +1,48 @@
 {#await lastPromise}
-  <content in:fade="{{duration: 500}}" style="width: {sideBarON ? '70%' : '100%'}; border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
+  <content in:fade="{{duration: 500}}" style="width: {$showSidebar ? '70%' : '100%'}; 
+                                              border: {$info.styles.borderSize} solid {$info.styles.borderColor}; 
+                                              border-radius: {$info.styles.borderRadius};
+                                              background-color: {$info.styles.divColor};
+                                              background-image: {$info.styles.divBackgroundPicture};
+                                              color: {$info.styles.textColor};" >
     <h2>Loading Partials...</h2>
   </content>
 {:then dt}
   {#await firstPromise}
-    <content in:fade="{{duration: 500}}" style="width: {sideBarON ? '70%' : '100%'}; border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
+    <content in:fade="{{duration: 500}}" style="width: {$showSidebar ? '70%' : '100%'}; 
+                                                border: {$info.styles.borderSize} solid {$info.styles.borderColor}; 
+                                                border-radius: {$info.styles.borderRadius};
+                                                background-color: {$info.styles.divColor};
+                                                background-image: {$info.styles.divBackgroundPicture};
+                                                color: {$info.styles.textColor};" >
       <h2 id='waiting'>Loading page...</h2>
     </content>
   {:then data}
-    <content in:fade="{{duration: 500}}" style="width: {sideBarON ? '70%' : '100%'}; border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >
+    <content in:fade="{{duration: 500}}" style="width: {$showSidebar ? '70%' : '100%'}; 
+                                                border: {$info.styles.borderSize} solid {$info.styles.borderColor}; 
+                                                border-radius: {$info.styles.borderRadius};
+                                                background-color: {$info.styles.divColor};
+                                                background-image: {$info.styles.divBackgroundPicture};
+                                                color: {$info.styles.textColor};" >
       {@html processData(data)}
     </content>
   {:catch e}
-    <content in:fade="{{duration: 500}}" style="width: {sideBarON ? '70%' : '100%'}; border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >     
+    <content in:fade="{{duration: 500}}" style="width: {$showSidebar ? '70%' : '100%'};
+                                                border: {$info.styles.borderSize} solid {$info.styles.borderColor}; 
+                                                border-radius: {$info.styles.borderRadius};
+                                                background-color: {$info.styles.divColor}; 
+                                                background-image: {$info.styles.divBackgroundPicture};
+                                                color: {$info.styles.textColor};" >     
       {@html errorPage}
     </content>
   {/await}
 {:catch e}
-  <content in:fade="{{duration: 500}}" style="width: {sideBarON ? '70%' : '100%'}; border: {styles.borderSize} solid {styles.borderColor}; border-radius: {styles.borderRadius}; background-color: {styles.divColor}; background-image: {styles.divBackgroundPicture}; color: {styles.textColor};" >     
+  <content in:fade="{{duration: 500}}" style="width: {$info.$showSidebar ? '70%' : '100%'};
+                                              border: {$info.styles.borderSize} solid {$info.styles.borderColor}; 
+                                              border-radius: {$info.styles.borderRadius};
+                                              background-color: {$info.styles.divColor};
+                                              background-image: {$info.styles.divBackgroundPicture};
+                                              color: {$info.styles.textColor};" >     
     {@html errorPage}
   </content>
 {/await}
@@ -56,17 +81,12 @@
   import { info } from '../store/infoStore.js';
   import { showSidebar } from '../store/showSidebar.js';
 
-  export let params = {};
-  
   let converter = null;
-  let page = null;
   let firstPromise;
   let errorPage = '';
   let parts = [];
-  let styles = {};
   let site = {};
   let lastPromise;
-  let sideBarON = true;
 
   async function fetchPage(pg) {
     if(pg !== null) {
@@ -150,19 +170,16 @@
     //
     const unsubscribeInfo = info.subscribe(value => {
       site = value;
-      styles = value.styles;
     });
 
     const unsubscribeLocation = location.subscribe(value => {
-      page = value;
-      lastPromise = getPartials();
-      firstPromise = fetchPage(page);
+      firstPromise = fetchPage(value);
     });
 
     const unsubscribeshowSidebar = showSidebar.subscribe(value => {
-      sideBarON = value;
     });
 
+    lastPromise = getPartials();
     return () => { 
       unsubscribeshowSidebar(); 
       unsubscribeInfo(); 
@@ -205,7 +222,7 @@
     //
     // This should never happen but if it does, then reload.
     //
-    if(typeof data === 'undefined') return '';
+    if((typeof data === 'undefined')||(data == null)) return '';
     
     if(data[0] === '<') {
       return data;
