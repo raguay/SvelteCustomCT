@@ -2,6 +2,7 @@
                       background-image: {$info.styles.divBackgroundPicture}; 
                       color: {$info.styles.textColor};">
   <h4>Blog Links</h4>
+  <a href='/#/blog/post-on-dev'>My First Post on Dev.to</a>
   <a href='/#/blog/updated-svelte-website-template'>Updated Svelte Website & Template</a>
   <a href='/#/blog/svelte-website-template'>Svelte Based Website Template</a>
   <a href='/#/blog/svelte-based-website'>Now Using a Svelte Powered Website on GitHub</a>
