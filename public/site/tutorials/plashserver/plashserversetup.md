@@ -392,13 +392,13 @@ with absolute placement starting at the topmost left position.
 
 ```javascript
 <script>
-  import { onMount } from 'svelte';
-  import { thirtyMinute } from '../store/thirtyMinuteStore.js';
+import { onMount } from 'svelte';
+import { thirtyMinute } from '../store/thirtyMinuteStore.js';
 
-  export let config;
+export let config;
 
-  let background;
-  let lastType;
+let background;
+let lastType;
 ```
 
 As before, I'm importing the thirtyMinute timer and the `onMount` command from
@@ -419,7 +419,8 @@ referenced on this line changes. Therefore, if the `config` file changes the
 in the `background` variable. That will trigger the `div` to be updated with the
 new styling.
 
-```javascript 
+```javascript
+
 function setBackground(config) {
   var result = '';
   var types = ['pic', 'solid', 'none'];
@@ -440,7 +441,7 @@ function setBackground(config) {
         //
         index = Math.floor(config.backgrounds.length*Math.random());
       }
-        
+
       //
       // Set the background to that image.
       //
@@ -454,7 +455,7 @@ function setBackground(config) {
       }
       result = config.backgroundColors[index];
       break;
-       
+
     case 'none':
     default:
       result = '';
