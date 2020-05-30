@@ -1,5 +1,25 @@
 # Tasks for CustomCT
 
+## launch (message)
+
+```bash
+cp -Rf public/imgs launch/
+cp -Rf public/site launch
+cp public/CNAME launch
+cp public/*.xml launch
+cp public/*.txt launch
+cp public/feed.json launch
+
+#
+# upload the changes.
+#
+cd launch
+git add *
+git commit -am "$message"
+git push
+cd ..
+```
+
 ## build (message)
 
 ```bash

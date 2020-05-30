@@ -2,6 +2,7 @@
                       background-image: {$info.styles.divBackgroundPicture}; 
                       color: {$info.styles.textColor};">
     <h4>Blog Links</h4>
+    <a href='/#/blog/corvid19widget'>New Tutorial on the Plash Server - Corvid-19 Widget</a>
     <a href='/#/blog/exchangerate-widget-plashserver'>New Tutorial on the Plash Server - Exchange Rate Widget</a>
     <a href='/#/blog/new-tutorial-series'>New Tutorial Series</a>
     <a href='/#/blog/post-on-dev'>My First Post on Dev.to</a>

@@ -92,7 +92,7 @@ In the `src/components` directory, create the file `Corvid19.svelte` and put the
     //critical	1
     //casesPerOneMillion	3
     //
-    load = fetch('https://corona.lmao.ninja/countries/' + config.country)
+    load = fetch('https://corona.lmao.ninja/v2/countries/' + config.country)
     .then((response) => {
       return response.json();
     })
@@ -102,8 +102,6 @@ In the `src/components` directory, create the file `Corvid19.svelte` and put the
     });
   }
 </script>
-
-
 ```
 
 If you say this is just like the `Exchange.svelte` file, you would be right. I copied 
@@ -164,7 +162,7 @@ their configuration. I'm not going to show everything in that file (it's startin
 to get very large). Just the new stuff will be shown.
 
 ```JavaScript
-mport Corvid19 from './components/Corvid19.svelte';
+import Corvid19 from './components/Corvid19.svelte';
 import Text from './components/Text.svelte';
 ```
 
