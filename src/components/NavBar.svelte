@@ -6,6 +6,7 @@
                         flex-direction: {$showNavbar ? 'row' : 'column'}; 
                         font-size: {$info.styles.navFontSize};" >
   <a href='/' style="color: {$info.styles.textColor};" on:mouseover={hoverAction} on:mouseout={hoverAction} use:link use:active>Home</a>
+  <a href='http://blog.customct.com' style="color: {$info.styles.textColor};" on:mouseover={hoverAction} on:mouseout={hoverAction} >Hashnode Blog</a>
   <a href='/blog/index' style="color: {$info.styles.textColor};" on:mouseover={hoverAction} on:mouseout={hoverAction} use:link use:active>Blog</a>
   <a href='/projects/index' style="color: {$info.styles.textColor};" on:mouseover={hoverAction} on:mouseout={hoverAction} use:link use:active>Projects</a>
   <a href='/tutorials/index' style="color: {$info.styles.textColor};" on:mouseover={hoverAction} on:mouseout={hoverAction} use:link use:active>Tutorials</a>
