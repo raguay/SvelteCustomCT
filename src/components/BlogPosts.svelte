@@ -36,7 +36,7 @@
 
 <script>
  import { onMount } from 'svelte';
- import { info } from '../store/infoStore.js';
+ import { info } from '../store/info.js';
  
  onMount(() => {
      //

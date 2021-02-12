@@ -1,15 +1,22 @@
 .DS_Store
 <<<<<<< HEAD
+<<<<<<< HEAD
 .git
 launch/*
 node_modules/*
 package-lock.json
 
 =======
+=======
+>>>>>>> refs/heads/master
 node_modules
 public/bundle.*
 bower_components
 launch
 /package-lock.json
+<<<<<<< HEAD
+/launch
+>>>>>>> refs/heads/master
+=======
 /launch
 >>>>>>> refs/heads/master

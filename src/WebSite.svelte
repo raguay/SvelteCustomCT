@@ -1,8 +1,8 @@
 <svelte:head>
-  <title>{$info.siteName + $seo.addTitle}</title>
+  <title>{$info.siteName + localSEO.addTitle}</title>
   <link rel='icon' type='image/png' href='/imgs/favicon.png'>
-  <meta name="robots" content="{$seo.robot}">
-  <meta name="description" content="{$seo.description}">
+  <meta name="robots" content="{localSEO.robot}">
+  <meta name="description" content="{localSEO.description}">
 </svelte:head>
 
 <svelte:window on:resize={winResize} bind:innerWidth={winWidth} />
@@ -60,11 +60,6 @@
     flex-shrink: 0;
   }
 
-  Router {
-    margin: 0px;
-    padding: 0px;
-  }
-
   #spacer {
     width: 150px;
     padding: 0px;
@@ -78,11 +73,6 @@
     align-content: center;
     flex-shrink: 0;
  }
-
-  #logo {
-    width: 100px;
-    height: 100px;
-  }
 
   #page {
     display: flex;
@@ -103,6 +93,7 @@
 
 <script>
   import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
   import About from './components/About.svexy';
   import Index from './components/Index.svexy';
   import Page from './components/Page.svelte';
@@ -110,8 +101,8 @@
   import Sidebar from './components/Sidebar.svelte';
   import NavBar from './components/NavBar.svelte';
   import Footer from './components/Footer.svelte';
-  import { info } from './store/infoStore.js';
-  import { seo } from './store/SEOstore.js';
+  import { info } from './store/info.js';
+  import { seo } from './store/seo.js';
   import { showSidebar } from './store/showSidebar.js';
   import { showNavbar } from './store/showNavbar.js';
   import Router, { link } from 'svelte-spa-router';
@@ -139,20 +130,24 @@
 
   let winWidth = 0;
   let showLogo = true;
-  let savedInfo = {};
+  let localInfo = {};
+  let localSEO = {};
   
   onMount(() => {
     //
     // Subscribe to the information store to get the site information.
     //
     const unsubscribeInfo = info.subscribe((value) => {
-      savedInfo = value;
       document.body.style.backgroundColor = value.styles.backgroundColor;
-      winResize({});
+      winResize(value);
+      localInfo = value;
     });
+    localInfo = get(info);
 
     const unsubscribeSEO = seo.subscribe((value) => {
+      localSEO = value;
     });
+    localSEO = get(seo);
 
     return () => {
       unsubsribeInfo();
@@ -164,29 +159,17 @@
     //
     // Determine if we will show the sidebar or not.
     //
-    if(savedInfo.styles.showSideBar && (winWidth > savedInfo.styles.widthSidebar)) {
-      showSidebar.set(true);
-    } else {
-      showSidebar.set(false);
-    }
+    showSidebar.set(true);
 
     //
     // Determine to show the logo or not.
     //
-    if(winWidth < savedInfo.styles.widthLogo) {
-      showLogo = false;
-    } else {
-      showLogo = true;
-    }
+    showLogo = true;
 
     //
     // Determine if we show the navigation bar or not.
     //
-    if(winWidth < savedInfo.styles.widthNavbar) {
-      showNavbar.set(false);
-    } else {
-      showNavbar.set(true);
-    }
+    showNavbar.set(true);
   }
 </script>
 

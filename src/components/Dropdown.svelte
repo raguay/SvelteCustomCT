@@ -18,11 +18,10 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { info } from '../store/infoStore.js';
+  import { info } from '../store/info.js';
 
   export let name = '';
   
-  let savedInfo = {};
   let maxHeight = 0;
   let setHeight = "100%";
   let newSave = false;
@@ -38,7 +37,6 @@
         } else {
           if(newSave) maxHeight = 0;
         }
-        setHeight = savedInfo.styles.navFontSize;
         break;
     }
   }
@@ -46,10 +44,8 @@
   function hoverAction(e) {
     switch(e.type) {
       case 'mouseover':
-        e.target.style.color = savedInfo.styles.navHoverColor;
         break;
       case 'mouseout':
-        e.target.style.color = savedInfo.styles.textColor;
         break;
     }
   }
@@ -57,7 +53,6 @@
 
   onMount(() => {
     const unsubscribeInfo = info.subscribe((value) => {
-      savedInfo = value;
       setHeight = value.styles.navFontSize;
       if(maxHeight !== 0) newSave = true;
     });

@@ -75,17 +75,22 @@
   import { onMount } from 'svelte';
   import showdown from 'showdown';
   import showdownHighlight from "showdown-highlight";
-  import {location, querystring} from 'svelte-spa-router';
+  import {location } from 'svelte-spa-router';
   import { get } from 'svelte/store';
   import { fade } from 'svelte/transition';
-  import { info } from '../store/infoStore.js';
+  import { info } from '../store/info.js';
   import { showSidebar } from '../store/showSidebar.js';
+
+  export let params;
 
   let converter = null;
   let firstPromise;
   let errorPage = '';
   let parts = [];
-  let site = {};
+  let site = {
+    local: true,
+    address: 'http://localhost:5000'
+  };
   let lastPromise;
 
   async function fetchPage(pg) {
@@ -171,15 +176,21 @@
     const unsubscribeInfo = info.subscribe(value => {
       site = value;
     });
+    site = get(info);
 
     const unsubscribeLocation = location.subscribe(value => {
       firstPromise = fetchPage(value);
     });
-
+    
     const unsubscribeshowSidebar = showSidebar.subscribe(value => {
     });
-
+    
+    //
+    // Get the partials for the site.
+    //
     lastPromise = getPartials();
+
+
     return () => { 
       unsubscribeshowSidebar(); 
       unsubscribeInfo(); 
@@ -191,12 +202,11 @@
     //
     // Get some error page.
     //
-    var st = get(info);
     var address = '';
-    if(st.local) {
-      address = st.address;
+    if(site.local) {
+      address = site.address;
     } else {
-      address = st.GitHub;
+      address = site.GitHub;
     }
     var rep = await fetch(address + '/site/404.md');
     var errorPageOrig = await rep.text();
@@ -205,20 +215,21 @@
     //
     // Get the parts pages.
     //
-    var lastPromise = null;
-    for(var pg of st.parts) {
+    var lPromise = null;
+    for(var pg of site.parts) {
       var rep = await fetch(address + '/site/parts/' + pg);
       var partial = await rep.text();
-      lastPromise = partial;
+      lPromise = partial;
       window.Handlebars.registerPartial(pg, partial);
     }
 
-    return lastPromise;
+    return lPromise;
   }
 
   function processData(data) {
     var result = '';
-    
+    lastPromise = null;
+
     //
     // This should never happen but if it does, then reload.
     //
@@ -249,17 +260,15 @@
     // processing, we need to make sure it's not changed more
     // than twice. If so, everything else is just body.
     //
-    var count = 0;
     for(var i = 0; i < data.length; i++) {
       if(fmregexp.test(data[i])) {
-        if(fmatter) i++;
         fmatter = !fmatter;
-        count++;
-      }
-      if(fmatter && (count < 2)) {
-        fm.push(data[i]);
       } else {
-        body.push(data[i]);
+        if(fmatter) {
+          fm.push(data[i]);
+        } else {
+          body.push(data[i]);
+        }
       }
     }
 
@@ -287,17 +296,17 @@
     //
     // Add the front matter to the Handlebar's data.
     //
-    for(var i = 1; i < fm.length;i++) {
+    for(var i = 0; i < fm.length;i++) {
       var parts = fm[i].split(' = ');
       if(parts.length < 2) parts = fm[i].split(': ');
       if(parts.length > 2) parts[1] = parts.slice(2);
       var item = unescape(parts[1]).trim();
-
+      
       //
       // Sometimes, the front matter has quotes. Let's remove them
       // automatically so I don't need to change everything.
       //
-      if(item[0] === '"') item = item.slice(1,-1);
+      if((item[0] === '"')||(item[0] === "'")) item = item.slice(1,-1);
 
       //
       // Set the frontmater into the data array for Handlebars
@@ -318,7 +327,6 @@
     // Run the body through Handlebars.
     //
     var bodyTemplate = window.Handlebars.compile(body.join('\n'));
-    var trying = true;
     var newBody = '';
 
     //
@@ -328,7 +336,7 @@
     try {
       newBody = bodyTemplate(hdata);
     } catch(e) {
-      newBody = "<h1>Page not ready...</h1><p>Please don't reload this page. Go to another markdown page and come back.</p>";
+      newBody = "<h1>Page not ready...</h1><p>Try reloading this page or go to another page and come back.</p>";
     }
 
     //
