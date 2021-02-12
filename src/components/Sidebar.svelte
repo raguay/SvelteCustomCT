@@ -41,7 +41,7 @@
   import Twitter from './Twitter.svelte';
   import BlogPosts from './BlogPosts.svelte';
   import { onMount } from 'svelte';
-  import { info } from '../store/infoStore.js';
+  import { info } from '../store/info.js';
 
   onMount(() => {
     //

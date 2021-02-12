@@ -36,21 +36,20 @@
 </style>
 
 <script>
+  import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
   import Dropdown from './Dropdown.svelte';
+  import { info } from '../store/info.js';
   import Router, { link } from 'svelte-spa-router';
   import active from 'svelte-spa-router/active';
-  import { onMount } from 'svelte';
-  import { info } from '../store/infoStore.js';
   import { showNavbar } from '../store/showNavbar.js';
 
-  let savedInfo = {};
 
   onMount(() => {
     //
     // Subscribe to the information store to get the site information.
     //
     const unsubscribeInfo = info.subscribe((value) => {
-      savedInfo = value;
     });
 
     const unsubscribeshowNavbar = showNavbar.subscribe((value) => {
@@ -67,16 +66,16 @@
   function hoverAction(e) {
     switch(e.type) {
       case 'mouseover':
-        e.target.style.color = savedInfo.styles.navHoverColor;
+        e.target.style.color = 'blue';
         break;
       case 'mouseout':
-        e.target.style.color = savedInfo.styles.textColor;
+        e.target.style.color = 'black';
         break;
     }
   }
 
   function changeTheme(newTheme) {
-    var newInfo = {...savedInfo};
+    var newInfo = get(info);
     switch(newTheme) {
       case 'light':
         newInfo.styles.backgroundColor= '#F8F8F2',

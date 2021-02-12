@@ -1,21 +1,27 @@
 import svelte from 'rollup-plugin-svelte';
+<<<<<<< HEAD
+=======
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+>>>>>>> tmp
 import livereload from 'rollup-plugin-livereload';
 import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
-import { mdsvex } from 'mdsvex';
+import { mdsvex } from "mdsvex";
 
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-	input: 'src/main.js',
-	output: {
-		sourcemap: true,
-		format: 'iife',
-		name: 'app',
-		file: 'public/bundle.js'
-	},
-	plugins: [
+  input: 'src/main.js',
+  output: {
+    sourcemap: true,
+    format: 'iife',
+    name: 'app',
+    file: 'public/bundle.js'
+  },
+  plugins: [
     svelte({
+<<<<<<< HEAD
         extensions: ['.svelte', '.svexy', '.svx'], // here actually
         preprocess: mdsvex({
           markdownOptions: {
@@ -49,4 +55,68 @@ export default {
 	watch: {
 		clearScreen: false
 	}
+=======
+      // enable run-time checks when not in production
+      dev: !production,
+      // we'll extract any component CSS out into
+      // a separate file - better for performance
+      css: css => {
+        css.write('bundle.css');
+      },
+      extensions: [".svelte", ".svexy"],
+      preprocess: mdsvex({
+        extension: ".svexy",
+        smartypants: {
+          quotes: true,
+          ellipses: true,
+          backticks: true,
+          dashes: true
+        }
+      })
+    }),
+
+    // If you have external dependencies installed from
+    // npm, you'll most likely need these plugins. In
+    // some cases you'll need additional configuration -
+    // consult the documentation for details:
+    // https://github.com/rollup/plugins/tree/master/packages/commonjs
+    resolve({
+      browser: true,
+      dedupe: ['svelte']
+    }),
+    commonjs(),
+
+    // In dev mode, call `npm run start` once
+    // the bundle has been generated
+    !production && serve(),
+
+    // Watch the `public` directory and refresh the
+    // browser on changes when not in production
+    !production && livereload('public'),
+
+    // If we're building for production (npm run build
+    // instead of npm run dev), minify
+    production && terser()
+  ],
+  watch: {
+    clearScreen: false
+  }
+>>>>>>> tmp
 };
+
+function serve() {
+  let started = false;
+
+  return {
+    writeBundle() {
+      if (!started) {
+        started = true;
+
+        require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
+          stdio: ['ignore', 'inherit', 'inherit'],
+          shell: true
+        });
+      }
+    }
+  };
+}

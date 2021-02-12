@@ -1,7 +1,29 @@
 .DS_Store
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+.git
+launch/*
+node_modules/*
+package-lock.json
+
+=======
+=======
+>>>>>>> refs/heads/master
+>>>>>>> tmp
 node_modules
 public/bundle.*
 bower_components
 launch
 /package-lock.json
+<<<<<<< HEAD
 /launch
+=======
+<<<<<<< HEAD
+/launch
+>>>>>>> refs/heads/master
+=======
+/launch
+>>>>>>> refs/heads/master
+>>>>>>> tmp

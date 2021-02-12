@@ -1,20 +1,13 @@
-```js exec
-  import { fade } from 'svelte/transition';
-  import { onMount } from 'svelte';
-  import { info } from '../store/infoStore.js';
- 
-  onMount(() => {
-    //
-    // Subscribe to the information store to get the site information.
-    //
-    const unsubscribeInfo = info.subscribe((value) => {
-    });
+---
+title: Index
+---
 
-    return () => { unsubscribeInfo(); };
-  });
-```
+<script>
+  import { info } from '../store/info.js';
+  import { showSidebar } from '../store/showSidebar.js';
+</script>
 
-```css style
+<style>
   .box {
     width: 100%;
     margin: auto;
@@ -22,11 +15,15 @@
     margin-top: 10px;
     margin-bottom: 10px;
   }
-```
-<div class="box" style="background-color: {$info.styles.divColor}; 
-                        background-image: {$info.styles.divBackgroundPicture}; 
-                        color: {$info.styles.textColor}; border: {$info.styles.borderSize} solid {$info.styles.borderColor};
-                        border-radius: {$info.styles.borderRadius};" in:fade="{{duration: 500}}">
+</style>
+
+<div class="box" style="width: {$showSidebar ? '70%' : '100%'}; 
+                        border: {$info.styles.borderSize} solid {$info.styles.borderColor}; 
+                        border-radius: {$info.styles.borderRadius};
+                        background-color: {$info.styles.divColor};
+                        background-image: {$info.styles.divBackgroundPicture};
+                        color: {$info.styles.textColor};"
+>
 
 My dad always told me, "make sure you have the right tool for the job! The wrong tool will take longer to get the job done, and usually will make a mess of it." I have always lived by that rule. Unfortunately, many people tackle their computer jobs with tools (programs) that are not appropriate for the task. Custom Computer Tools is working to help with this problem.
 
@@ -83,4 +80,3 @@ My favorite file manager is [fman](https://fman.io/) because I can add functiona
 This page describes all the eLisp extensions I've written for Emacs. I've gone back to using Emacs with the [DoomEmacs](https://github.com/hlissner/doom-emacs) configuration. This setup is very easy to use and very fast. I would highly recommend it to anyone using Emacs.
 
 </div>
-

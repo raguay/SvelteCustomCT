@@ -1,20 +1,10 @@
-```js exec
-  import { fade } from 'svelte/transition';
-  import { onMount } from 'svelte';
-  import { info } from '../store/infoStore.js';
- 
-  onMount(() => {
-    //
-    // Subscribe to the information store to get the site information.
-    //
-    const unsubscribeInfo = info.subscribe((value) => {
-    });
 
-    return () => { unsubscribeInfo(); };
-  });
-```
+<script>
+  import { info } from '../store/info.js';
+  import { showSidebar } from '../store/showSidebar.js';
+</script>
 
-```css style
+<style>
   .box {
     width: 100%;
     margin: auto;
@@ -22,13 +12,15 @@
     margin-top: 10px;
     margin-bottom: 10px;
   }
-```
+</style>
 
-<div class="box" style="border: {$info.styles.borderSize} solid {$info.styles.borderColor}; 
-                        border-radius: {$info.styles.borderRadius}; 
+<div class="box" style="width: {$showSidebar ? '70%' : '100%'}; 
+                        border: {$info.styles.borderSize} solid {$info.styles.borderColor}; 
+                        border-radius: {$info.styles.borderRadius};
                         background-color: {$info.styles.divColor};
                         background-image: {$info.styles.divBackgroundPicture};
-                        color: {$info.styles.textColor};" in:fade="{{duration: 500}}">
+                        color: {$info.styles.textColor};"
+>
 
 ## About Us
 
@@ -92,4 +84,3 @@ listed on my [Alfred Workflows page](/#/projects/alfred)). Here are articles tha
 - [How to Create Your Own Local Premium URL Shortener Service](http://code.tutsplus.com/tutorials/how-to-create-your-own-local-premium-url-shortener-service--cms-29626)
 
 </div>
-
