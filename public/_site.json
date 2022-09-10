@@ -1,0 +1,88 @@
+{
+  "items" : [
+    {
+      "path" : "bundle.js",
+      "mimeType" : "text/javascript",
+      "lastUpdated" : 1613126375,
+      "checksum" : "97ed01c646bf9365487fd3a450122a76",
+      "fileSize" : 1083431
+    },
+    {
+      "path" : "twtxt.txt",
+      "mimeType" : "text/plain",
+      "lastUpdated" : 1572334119,
+      "checksum" : "14def97cfecdf67fc2d163304625acdb",
+      "fileSize" : 289
+    },
+    {
+      "path" : "bundle.js.map",
+      "mimeType" : "application/octet-stream",
+      "lastUpdated" : 1613126375,
+      "checksum" : "177caf565077edefbf32c8dec244d6be",
+      "fileSize" : 2371657
+    },
+    {
+      "path" : "_site.json",
+      "mimeType" : "application/json",
+      "lastUpdated" : 1662419246,
+      "checksum" : "43848f4a2442c51d3cfa304dd9f03425",
+      "fileSize" : 2342
+    },
+    {
+      "path" : "favicon.png",
+      "mimeType" : "image/png",
+      "lastUpdated" : 1601989642,
+      "checksum" : "c64beab291de80970aa4887a5a1c9135",
+      "fileSize" : 3127
+    },
+    {
+      "path" : "feed.json",
+      "mimeType" : "application/json",
+      "lastUpdated" : 1577790023,
+      "checksum" : "ed01c48ae71b311d124d8be5c6a5a3c0",
+      "fileSize" : 5595
+    },
+    {
+      "path" : "sitemap.xml",
+      "mimeType" : "application/xml",
+      "lastUpdated" : 1572334119,
+      "checksum" : "1603d0423092b847f89b91b0d63db9fb",
+      "fileSize" : 10377
+    },
+    {
+      "path" : "keybase.txt",
+      "mimeType" : "text/plain",
+      "lastUpdated" : 1572334119,
+      "checksum" : "237e37736d7de8161a4b660ab2da2d26",
+      "fileSize" : 2912
+    },
+    {
+      "path" : "index.html",
+      "mimeType" : "text/html",
+      "lastUpdated" : 1613015850,
+      "checksum" : "badff33a6807afacf04eb64a0b9562a5",
+      "fileSize" : 735
+    },
+    {
+      "path" : "bundle.css",
+      "mimeType" : "text/css",
+      "lastUpdated" : 1613100276,
+      "checksum" : "dbb47c85740313d5ee4f25a966bca02d",
+      "fileSize" : 2007
+    },
+    {
+      "path" : "bundle.css.map",
+      "mimeType" : "application/octet-stream",
+      "lastUpdated" : 1613126375,
+      "checksum" : "65c5b840d20603ac9821f041f5305bad",
+      "fileSize" : 48233
+    },
+    {
+      "path" : "CNAME",
+      "mimeType" : "application/octet-stream",
+      "lastUpdated" : 1572334119,
+      "checksum" : "bc38ea733e3d636b9841abbc87dedf5c",
+      "fileSize" : 17
+    }
+  ]
+}
