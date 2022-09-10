@@ -1,13 +1,17 @@
 .DS_Store
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> parent of 34274a7 (# Conflicts:)
 .git
 launch/*
 node_modules/*
 package-lock.json
 
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> refs/heads/master
@@ -27,3 +31,5 @@ launch
 /launch
 >>>>>>> refs/heads/master
 >>>>>>> tmp
+=======
+>>>>>>> parent of 34274a7 (# Conflicts:)
