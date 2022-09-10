@@ -1,35 +1,6 @@
-.DS_Store
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> parent of 34274a7 (# Conflicts:)
-.git
-launch/*
-node_modules/*
-package-lock.json
+/node_modules/
+/public/build/
+/dist
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> refs/heads/master
->>>>>>> tmp
-node_modules
-public/bundle.*
-bower_components
-launch
+.DS_Store
 /package-lock.json
-<<<<<<< HEAD
-/launch
-=======
-<<<<<<< HEAD
-/launch
->>>>>>> refs/heads/master
-=======
-/launch
->>>>>>> refs/heads/master
->>>>>>> tmp
-=======
->>>>>>> parent of 34274a7 (# Conflicts:)
